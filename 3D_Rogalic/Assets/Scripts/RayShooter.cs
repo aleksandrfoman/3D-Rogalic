@@ -20,7 +20,16 @@ public class RayShooter : MonoBehaviour
             RaycastHit hit;
             if(Physics.Raycast(ray,out hit))
             {
-                StartCoroutine(SphereIndicator(hit.point));
+                GameObject hitObject = hit.transform.gameObject;
+                ReactiveTarget target = hitObject.GetComponent<ReactiveTarget>();
+                if (target != null)
+                {
+                    target.ReactToHit();
+                }
+                else
+                {
+                    StartCoroutine(SphereIndicator(hit.point));
+                }
             }
         }
     }
@@ -28,6 +37,7 @@ public class RayShooter : MonoBehaviour
     private IEnumerator SphereIndicator(Vector3 pos)
     {
         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphere.GetComponent<Renderer>().material.color = Color.black;
         sphere.transform.position = pos;
 
         yield return new WaitForSeconds(1);
